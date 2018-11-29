@@ -4,14 +4,14 @@ const { validationResult } = require("express-validator/check");
 const User = require("../models/User");
 const config = require("../config");
 
-exports.register = async (req, res, next) => {
-  const { username, email, password } = req.body;
+exports.register = async (request, response, next) => {
+  const { username, email, password } = request.body;
 
   try {
-    const errors = validationResult(req);
+    const errors = validationResult(request);
 
     if (!errors.isEmpty()) {
-      res.validationError(
+      response.validationError(
         errors.array().map(error => {
           return { param: error.param, message: error.msg };
         })
@@ -21,11 +21,32 @@ exports.register = async (req, res, next) => {
 
     const user = await User.create({ username, email, password });
 
-    const token = generateJWT({ username: user.username, email: user.email });
-
-    res.status(201).json({ success: true, data: { token } });
+    response.status(201).json({ success: true });
   } catch (error) {
-    res.status(500).json({ success: false });
+    response.status(500).json({ success: false });
+  }
+};
+
+exports.login = async (request, response, next) => {
+  const { username } = request.body;
+
+  try {
+    const errors = validationResult(request);
+
+    if (!errors.isEmpty()) {
+      response.validationError(
+        errors.array().map(error => {
+          return { param: error.param, message: error.msg };
+        })
+      );
+      return;
+    }
+
+    const token = generateJWT({ username });
+
+    response.status(200).json({ success: true, data: { token } });
+  } catch (error) {
+    response.status(500).json({ success: false });
   }
 };
 
