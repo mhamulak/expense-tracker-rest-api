@@ -9,30 +9,28 @@ exports.register = async (req, res, next) => {
 
   try {
     const errors = validationResult(req);
-    console.log(errors.array());
+
     if (!errors.isEmpty()) {
-      return res.validationError(
+      res.validationError(
         errors.array().map(error => {
           return { param: error.param, message: error.msg };
         })
       );
+      return;
     }
 
     const user = await User.create({ username, email, password });
 
-    const token = jwt.sign(
-      { username: user.username, email: user.email },
-      config.jwt.secret,
-      { expiresIn: config.jwt.expirationTime }
-    );
+    const token = generateJWT({ username: user.username, email: user.email });
 
-    res.status(201).json({
-      success: true,
-      data: { token }
-    });
-
-    console.log(user);
+    res.status(201).json({ success: true, data: { token } });
   } catch (error) {
     res.status(500).json({ success: false });
   }
 };
+
+function generateJWT(claims) {
+  return jwt.sign(claims, config.jwt.secret, {
+    expiresIn: config.jwt.expirationTime
+  });
+}

@@ -33,5 +33,7 @@ module.exports = [
       if (req.body.password !== value) {
         throw new Error("Passwords do not match");
       }
+
+      return true;
     })
 ];
