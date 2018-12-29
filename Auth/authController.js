@@ -2,8 +2,6 @@ const jwt = require("jsonwebtoken");
 
 const User = require("../models/User");
 
-const config = require("../config");
-
 exports.register = async (req, res, next) => {
   const { username, email, password } = req.body;
 
@@ -35,7 +33,7 @@ exports.login = async (req, res, next) => {
 };
 
 function generateJWT(claims) {
-  return jwt.sign(claims, config.jwt.secret, {
-    expiresIn: config.jwt.expirationTime
+  return jwt.sign(claims, process.env.JWT_SECRET, {
+    expiresIn: process.env.JWT_EXPIRATION_TIME
   });
 }

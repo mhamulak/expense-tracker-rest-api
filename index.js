@@ -2,17 +2,12 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
 
-const config = require("./config");
-
 const authRoutes = require("./Auth/authRoutes");
 const usersRoutes = require("./Users/usersRoutes");
 
 const errorHandler = require("./utils/errorHandler");
 
-const {
-  app: { port },
-  db: { connectionString }
-} = config;
+require('dotenv').config();
 
 const app = express();
 
@@ -25,11 +20,9 @@ app.use(errorHandler);
 
 const startServer = async () => {
   try {
-    await mongoose.connect(connectionString, { useNewUrlParser: true });
+    await mongoose.connect(process.env.DB_CONNECTION_STRING, { useNewUrlParser: true });
 
-    app.listen(port, () => {
-      console.log(`Server is running on port ${port}.`);
-    });
+    app.listen(process.env.PORT);
   } catch (error) {
     console.log(error);
   }
