@@ -1,52 +1,36 @@
 const jwt = require("jsonwebtoken");
-const { validationResult } = require("express-validator/check");
 
 const User = require("../models/User");
+
 const config = require("../config");
 
-exports.register = async (request, response, next) => {
-  const { username, email, password } = request.body;
+exports.register = async (req, res, next) => {
+  const { username, email, password } = req.body;
 
   try {
-    const errors = validationResult(request);
-
-    if (!errors.isEmpty()) {
-      response.validationError(
-        errors.array().map(error => {
-          return { param: error.param, message: error.msg };
-        })
-      );
-      return;
-    }
-
     const user = await User.create({ username, email, password });
 
-    response.status(201).json({ success: true });
+    res.status(201).json({ success: true });
   } catch (error) {
-    response.status(500).json({ success: false });
+    next(error);
   }
 };
 
-exports.login = async (request, response, next) => {
-  const { username } = request.body;
+exports.login = async (req, res, next) => {
+  const { username } = req.body;
 
   try {
-    const errors = validationResult(request);
+    const user = await User.findOne({ username: username });
 
-    if (!errors.isEmpty()) {
-      response.validationError(
-        errors.array().map(error => {
-          return { param: error.param, message: error.msg };
-        })
-      );
-      return;
+    if (!user) {
+      throw new Error(`Could not find user: ${username}`);
     }
 
-    const token = generateJWT({ username });
+    const token = generateJWT({ userId: user._id, username });
 
-    response.status(200).json({ success: true, data: { token } });
+    res.status(200).json({ success: true, data: { token } });
   } catch (error) {
-    response.status(500).json({ success: false });
+    next(error);
   }
 };
 

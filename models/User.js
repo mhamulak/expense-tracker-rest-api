@@ -3,7 +3,7 @@ const bcrypt = require("bcrypt");
 
 const Schema = mongoose.Schema;
 
-const user = new Schema(
+const userSchema = new Schema(
   {
     username: {
       type: String,
@@ -37,6 +37,6 @@ async function hashUserPassword(next) {
   }
 }
 
-user.pre("save", hashUserPassword);
+userSchema.pre("save", hashUserPassword);
 
-module.exports = mongoose.model("User", user);
+module.exports = mongoose.model("User", userSchema);

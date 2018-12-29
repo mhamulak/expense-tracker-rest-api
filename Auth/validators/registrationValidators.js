@@ -6,6 +6,7 @@ module.exports = [
   body("username")
     .trim()
     .isAlphanumeric()
+    .isLength({ min: 4, max: 16 })
     .custom(async value => {
       const user = await User.findOne({ username: value });
 

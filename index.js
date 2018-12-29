@@ -5,6 +5,9 @@ const mongoose = require("mongoose");
 const config = require("./config");
 
 const authRoutes = require("./Auth/authRoutes");
+const usersRoutes = require("./Users/usersRoutes");
+
+const errorHandler = require("./utils/errorHandler");
 
 const {
   app: { port },
@@ -15,31 +18,21 @@ const app = express();
 
 app.use(bodyParser.json());
 
-app.use((req, res, next) => {
-  res.validationError = errors => {
-    res.status(422).json({
-      success: false,
-      error: {
-        code: 422,
-        message: "Validation error",
-        errors
-      }
-    });
-  };
-
-  next();
-});
-
 app.use("/auth", authRoutes);
+app.use("/users", usersRoutes);
 
-mongoose
-  .connect(
-    connectionString,
-    { useNewUrlParser: true }
-  )
-  .then(() => {
+app.use(errorHandler);
+
+const startServer = async () => {
+  try {
+    await mongoose.connect(connectionString, { useNewUrlParser: true });
+
     app.listen(port, () => {
       console.log(`Server is running on port ${port}.`);
     });
-  })
-  .catch(error => console.error(error));
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+startServer();
