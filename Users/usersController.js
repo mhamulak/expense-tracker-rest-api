@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 
 const Account = require('../models/Account');
 const User = require('../models/User');
+const Category = require('../models/Category');
 
 exports.getUser = async (req, res, next) => {
   const { id: userId } = req.params;
@@ -46,6 +47,21 @@ exports.addAccount = async (req, res, next) => {
     await account.save();
 
     res.status(201).json({ success: true })
+  } catch (error) {
+    next(error);
+  }
+};
+
+exports.getCategories = async (req, res, next) => {
+  const userId = req.userId;
+
+  try {
+    const categories = await Category.find({ user: userId }, 'name type icon user');
+
+    res.status(200).json({
+      success: true,
+      data: categories
+    });
   } catch (error) {
     next(error);
   }
