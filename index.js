@@ -4,6 +4,9 @@ const mongoose = require("mongoose");
 
 const authRoutes = require("./Auth/authRoutes");
 const usersRoutes = require("./Users/usersRoutes");
+const categoriesRoutes = require("./Categories/categoriesRoutes");
+
+const validateJWT = require("./Auth/middlewares/validateJWT");
 
 const errorHandler = require("./utils/errorHandler");
 
@@ -14,7 +17,8 @@ const app = express();
 app.use(bodyParser.json());
 
 app.use("/auth", authRoutes);
-app.use("/users", usersRoutes);
+app.use("/users", validateJWT, usersRoutes);
+app.use("/categories", validateJWT, categoriesRoutes);
 
 app.use(errorHandler);
 

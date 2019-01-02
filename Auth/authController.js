@@ -34,6 +34,6 @@ exports.login = async (req, res, next) => {
 
 function generateJWT(claims) {
   return jwt.sign(claims, process.env.JWT_SECRET, {
-    expiresIn: process.env.JWT_EXPIRATION_TIME
+    expiresIn: +process.env.JWT_EXPIRATION_TIME
   });
 }
