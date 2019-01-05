@@ -97,7 +97,7 @@ exports.addTransaction = async (req, res, next) => {
 
     account.transactions = [
       ...account.transactions,
-      { value, category: categoryId, description }
+      { value, category: categoryId, description, createdAt: new Date() }
     ];
     await account.save();
 

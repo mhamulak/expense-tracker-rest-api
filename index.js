@@ -6,6 +6,7 @@ const authRoutes = require("./Auth/authRoutes");
 const usersRoutes = require("./Users/usersRoutes");
 const categoriesRoutes = require("./Categories/categoriesRoutes");
 const accountsRoutes = require("./Accounts/accountsRoutes");
+const transactionsRoutes = require("./Transactions/transactionsRoutes");
 
 const validateJWT = require("./Auth/middlewares/validateJWT");
 
@@ -21,6 +22,7 @@ app.use("/auth", authRoutes);
 app.use("/users", validateJWT, usersRoutes);
 app.use("/categories", validateJWT, categoriesRoutes);
 app.use("/accounts", validateJWT, accountsRoutes);
+app.use("/transactions", validateJWT, transactionsRoutes);
 
 app.use(errorHandler);
 
