@@ -4,6 +4,6 @@ module.exports = [
   body('name')
     .trim()
     .isString()
-    .isLength({ min: 1, max: 12 })
+    .isLength({ min: 1, max: 20 })
     .escape()
 ];
