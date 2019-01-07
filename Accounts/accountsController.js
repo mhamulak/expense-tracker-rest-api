@@ -89,17 +89,15 @@ exports.addTransaction = async (req, res, next) => {
       throw new Error(`Category ID: ${categoryId} not found.`);
     }
 
-    const account = await Account.findById(accountId);
+    const newTransaction = { value, category: categoryId, description, createdAt: new Date() };
+
+    const account = await Account.findByIdAndUpdate(accountId, {
+      $push: { transactions: newTransaction }
+    });
 
     if (!account) {
       throw new Error(`Account ID: ${accountId} not found.`);
     }
-
-    account.transactions = [
-      ...account.transactions,
-      { value, category: categoryId, description, createdAt: new Date() }
-    ];
-    await account.save();
 
     res.status(201).json({ success: true });
   } catch (error) {
