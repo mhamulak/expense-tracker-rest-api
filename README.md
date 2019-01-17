@@ -16,5 +16,5 @@ REST API for the Expense Tracker application.
 Use `.env` file to configure database connection, set environment and JWT-related options.
 
 ## License
-This project is licensed under the terms of the MIT license.
+This project is licensed under the terms of the [MIT](LICENSE) license.
 
