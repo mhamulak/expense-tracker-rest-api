@@ -8,7 +8,7 @@
     "start": "nodemon index.js"
   },
   "author": "Maciej Hamulak",
-  "license": "ISC",
+  "license": "MIT",
   "devDependencies": {
     "nodemon": "^1.18.7"
   },
